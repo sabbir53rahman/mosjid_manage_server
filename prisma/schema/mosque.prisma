@@ -1,0 +1,45 @@
+model Mosque {
+  id              String        @id @default(cuid())
+
+  name            String
+  slug            String        @unique
+
+  address         String
+
+  phone           String?
+  email           String?
+
+  logo            String?
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  admins          Admin[]
+  musullis        Musulli[]
+  prayerTime      PrayerTime?
+
+  transactions    Transaction[]
+}
+
+model PrayerTime {
+  id              String      @id @default(cuid())
+
+  mosqueId        String      @unique
+
+  fajr            String
+
+  zuhr            String
+
+  asr             String
+
+  maghrib         String
+
+  isha            String
+
+  jummah          String?
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  mosque          Mosque      @relation(fields: [mosqueId], references: [id])
+}

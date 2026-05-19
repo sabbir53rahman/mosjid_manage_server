@@ -1,0 +1,22 @@
+model MonthlyFee {
+  id                  String          @id @default(cuid())
+
+  musulliId           String
+
+  month               Int
+  year                Int
+
+  expectedAmount      Float
+
+  paidAmount          Float           @default(0)
+
+  dueAmount           Float
+
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  musulli             Musulli         @relation(fields: [musulliId], references: [id])
+  transactions        Transaction[]
+
+  @@unique([musulliId, month, year])
+}

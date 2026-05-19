@@ -1,0 +1,29 @@
+model Transaction {
+  id                  String        @id @default(cuid())
+
+  mosqueId            String
+
+  musulliId           String
+
+  monthlyFeeId        String
+
+  amount              Float
+
+  paymentDate         DateTime
+
+  note                String?
+
+  collectedBy         String?
+
+  createdAt           DateTime      @default(now())
+
+  mosque              Mosque        @relation(fields: [mosqueId], references: [id])
+
+  musulli             Musulli       @relation(fields: [musulliId], references: [id])
+
+  monthlyFee          MonthlyFee    @relation(fields: [monthlyFeeId], references: [id])
+
+  @@index([mosqueId])
+  @@index([musulliId])
+  @@index([monthlyFeeId])
+}

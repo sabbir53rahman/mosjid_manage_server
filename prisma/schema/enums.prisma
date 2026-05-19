@@ -1,0 +1,11 @@
+enum Role {
+  SUPER_ADMIN
+  MOSQUE_ADMIN
+  STAFF
+}
+
+enum MonthlyStatus {
+  PAID
+  PARTIAL
+  DUE
+}

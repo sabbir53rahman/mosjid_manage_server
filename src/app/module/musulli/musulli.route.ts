@@ -1,0 +1,27 @@
+import { Router } from "express";
+import { MusulliController } from "./musulli.controller";
+import { checkAuth } from "../../middleware/checkAuth";
+import { validateRequest } from "../../middleware/validateRequest";
+import { createMusulliSchema, updateMusulliSchema } from "./musulli.validation";
+
+const router = Router();
+
+router.post(
+  "/",
+  checkAuth("MOSQUE_ADMIN", "STAFF"),
+  validateRequest(createMusulliSchema),
+  MusulliController.createMusulli
+);
+
+router.get("/", checkAuth("MOSQUE_ADMIN", "STAFF"), MusulliController.getMusullis);
+
+router.get("/:id", checkAuth("MOSQUE_ADMIN", "STAFF"), MusulliController.getSingleMusulli);
+
+router.put(
+  "/:id",
+  checkAuth("MOSQUE_ADMIN", "STAFF"),
+  validateRequest(updateMusulliSchema),
+  MusulliController.updateMusulli
+);
+
+export const MusulliRoutes = router;
