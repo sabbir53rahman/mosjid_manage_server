@@ -6,6 +6,7 @@ import { cookieHelpers } from "../utils/cookie";
 import { jwtHelpers } from "../utils/jwt";
 import { envVars } from "../../config/env";
 import { Role } from "../../generated/prisma/enums";
+import { prisma } from "../lib/prisma";
 
 export const checkAuth =
   (...authRoles: Role[]) =>
@@ -45,11 +46,19 @@ export const checkAuth =
         );
       }
 
+      let mosqueId: string | undefined = undefined;
+      if (user!.role === Role.MOSQUE_ADMIN) {
+        const mosque = await prisma.mosque.findUnique({
+          where: { ownerId: user!.userId },
+        });
+        mosqueId = mosque?.id;
+      }
+
       req.user = {
         userId: user!.userId,
-        role: user!.role,
+        role: user!.role as Role,
         email: user!.email,
-        mosqueId: user!.mosqueId,
+        mosqueId,
         name: user!.name,
       };
 

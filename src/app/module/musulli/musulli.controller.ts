@@ -3,6 +3,7 @@ import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import status from "http-status";
 import { MusulliService } from "./musulli.service";
+import AppError from "../../errorHelpers/appError";
 
 const createMusulli = catchAsync(async (req: Request, res: Response) => {
   const result = await MusulliService.createMusulli(req.body);
@@ -17,6 +18,9 @@ const createMusulli = catchAsync(async (req: Request, res: Response) => {
 
 const getMusullis = catchAsync(async (req: Request, res: Response) => {
   const mosqueId = req.user.mosqueId;
+  if (!mosqueId) {
+    throw new AppError(status.BAD_REQUEST, "User is not associated with any mosque");
+  }
   const result = await MusulliService.getMusullis(mosqueId);
 
   sendResponse(res, {
@@ -29,6 +33,9 @@ const getMusullis = catchAsync(async (req: Request, res: Response) => {
 
 const getSingleMusulli = catchAsync(async (req: Request, res: Response) => {
   const mosqueId = req.user.mosqueId;
+  if (!mosqueId) {
+    throw new AppError(status.BAD_REQUEST, "User is not associated with any mosque");
+  }
   const id = req.params.id as string;
   const result = await MusulliService.getSingleMusulli(mosqueId, id);
 
@@ -42,6 +49,9 @@ const getSingleMusulli = catchAsync(async (req: Request, res: Response) => {
 
 const updateMusulli = catchAsync(async (req: Request, res: Response) => {
   const mosqueId = req.user.mosqueId;
+  if (!mosqueId) {
+    throw new AppError(status.BAD_REQUEST, "User is not associated with any mosque");
+  }
   const id = req.params.id as string;
   const result = await MusulliService.updateMusulli(mosqueId, id, req.body);
 

@@ -8,13 +8,13 @@ const router = Router();
 
 router.post(
   "/",
-  // checkAuth("MOSQUE_ADMIN"),
-  // validateRequest(createMosqueSchema),
+  checkAuth(),
+  validateRequest(createMosqueSchema),
   MosqueController.createMosque
 );
 
-router.get("/my-mosque/:ownerId",
-  // checkAuth("MOSQUE_ADMIN"),
+router.get("/my-mosque",
+  checkAuth("MOSQUE_ADMIN"),
   MosqueController.getMosqueDetails);
 
 router.put(

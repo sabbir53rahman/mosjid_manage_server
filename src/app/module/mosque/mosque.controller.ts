@@ -6,11 +6,11 @@ import { MosqueService } from "./mosque.service";
 import AppError from "../../errorHelpers/appError";
 
 const createMosque = catchAsync(async (req: Request, res: Response) => {
-  // const ownerId = req.user?.userId;
-  // if (!ownerId) {
-  //   throw new AppError(status.NOT_FOUND, "User not found");
-  // }
-  const result = await MosqueService.createMosque(req.body);
+  const ownerId = req.user?.userId;
+  if (!ownerId) {
+    throw new AppError(status.NOT_FOUND, "User not found");
+  }
+  const result = await MosqueService.createMosque(req.body, ownerId);
 
   sendResponse(res, {
     httpStatusCode: status.CREATED,
@@ -21,9 +21,8 @@ const createMosque = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getMosqueDetails = catchAsync(async (req: Request, res: Response) => {
-  // Using the mosqueId from the logged-in admin's token
-  const ownerId = req.params.ownerId;
-  const result = await MosqueService.getMosqueDetails(ownerId as string);
+  const ownerId = req.user.userId;
+  const result = await MosqueService.getMosqueDetails(ownerId);
 
   sendResponse(res, {
     httpStatusCode: status.OK,
@@ -34,8 +33,11 @@ const getMosqueDetails = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updatePrayerTime = catchAsync(async (req: Request, res: Response) => {
-  const ownerId = req.user.userId;
-  const result = await MosqueService.updatePrayerTime(ownerId, req.body);
+  const mosqueId = req.user.mosqueId;
+  if (!mosqueId) {
+    throw new AppError(status.NOT_FOUND, "Mosque not found for this user");
+  }
+  const result = await MosqueService.updatePrayerTime(mosqueId, req.body);
 
   sendResponse(res, {
     httpStatusCode: status.OK,

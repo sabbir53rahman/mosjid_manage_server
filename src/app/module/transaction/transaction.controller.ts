@@ -3,9 +3,13 @@ import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import status from "http-status";
 import { TransactionService } from "./transaction.service";
+import AppError from "../../errorHelpers/appError";
 
 const collectFee = catchAsync(async (req: Request, res: Response) => {
   const mosqueId = req.user.mosqueId;
+  if (!mosqueId) {
+    throw new AppError(status.BAD_REQUEST, "User is not associated with any mosque");
+  }
   const adminName = req.user.name;
   const result = await TransactionService.collectFee(mosqueId, adminName, req.body);
 
@@ -19,6 +23,9 @@ const collectFee = catchAsync(async (req: Request, res: Response) => {
 
 const getTransactions = catchAsync(async (req: Request, res: Response) => {
   const mosqueId = req.user.mosqueId;
+  if (!mosqueId) {
+    throw new AppError(status.BAD_REQUEST, "User is not associated with any mosque");
+  }
   const result = await TransactionService.getTransactions(mosqueId);
 
   sendResponse(res, {

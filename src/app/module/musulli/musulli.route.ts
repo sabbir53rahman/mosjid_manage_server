@@ -2,7 +2,7 @@ import { Router } from "express";
 import { MusulliController } from "./musulli.controller";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
-import { createMusulliSchema, updateMusulliSchema } from "./musulli.validation";
+import { updateMusulliSchema } from "./musulli.validation";
 
 const router = Router();
 

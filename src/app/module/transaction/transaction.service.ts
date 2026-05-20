@@ -15,8 +15,8 @@ const collectFee = async (mosqueId: string, collectedBy: string, payload: IColle
   }
 
   const result = await prisma.$transaction(async (tx) => {
-    // Find or create the MonthlyFee record
-    let monthlyFee = await tx.monthlyFee.findUnique({
+    // Find or create the MonthlyPayment record
+    let monthlyPayment = await tx.monthlyPayment.findUnique({
       where: {
         musulliId_month_year: {
           musulliId,
@@ -26,61 +26,71 @@ const collectFee = async (mosqueId: string, collectedBy: string, payload: IColle
       },
     });
 
-    if (!monthlyFee) {
-      monthlyFee = await tx.monthlyFee.create({
+    if (!monthlyPayment) {
+      const expectedAmount = musulli.monthlyFee;
+      const dueAmount = expectedAmount - amount;
+      const paymentStatus = amount >= expectedAmount ? "PAID" : amount > 0 ? "PARTIAL" : "DUE";
+
+      monthlyPayment = await tx.monthlyPayment.create({
         data: {
           musulliId,
           month,
           year,
-          expectedAmount: musulli.monthlyFee,
+          expectedAmount,
           paidAmount: amount,
-          dueAmount: musulli.monthlyFee - amount,
+          dueAmount: dueAmount < 0 ? 0 : dueAmount,
+          status: paymentStatus,
         },
       });
     } else {
-      monthlyFee = await tx.monthlyFee.update({
-        where: { id: monthlyFee.id },
+      const totalPaid = monthlyPayment.paidAmount + amount;
+      const dueAmount = monthlyPayment.expectedAmount - totalPaid;
+      const paymentStatus = totalPaid >= monthlyPayment.expectedAmount ? "PAID" : totalPaid > 0 ? "PARTIAL" : "DUE";
+
+      monthlyPayment = await tx.monthlyPayment.update({
+        where: { id: monthlyPayment.id },
         data: {
-          paidAmount: monthlyFee.paidAmount + amount,
-          dueAmount: monthlyFee.dueAmount - amount < 0 ? 0 : monthlyFee.dueAmount - amount,
+          paidAmount: totalPaid,
+          dueAmount: dueAmount < 0 ? 0 : dueAmount,
+          status: paymentStatus,
         },
       });
     }
 
-    // Create the transaction record
-    const transaction = await tx.transaction.create({
+    // Create the payment log record
+    const paymentLog = await tx.paymentLog.create({
       data: {
-        mosqueId,
         musulliId,
-        monthlyFeeId: monthlyFee.id,
+        monthlyPaymentId: monthlyPayment.id,
         amount,
         paymentDate: new Date(paymentDate),
         note,
-        collectedBy,
       },
     });
 
-    // Update musulli overall due (this is a simplified logic, ideally recalculate all dues)
+    // Update musulli overall due
     await tx.musulli.update({
       where: { id: musulliId },
       data: {
         paymentDue: {
           decrement: amount,
         },
-        // We can also try to update paidTillMonth/Year if this month is fully paid,
-        // but for simplicity, we just track the exact payments per month.
       },
     });
 
-    return transaction;
+    return paymentLog;
   });
 
   return result;
 };
 
 const getTransactions = async (mosqueId: string) => {
-  const result = await prisma.transaction.findMany({
-    where: { mosqueId },
+  const result = await prisma.paymentLog.findMany({
+    where: {
+      musulli: {
+        mosqueId,
+      },
+    },
     include: {
       musulli: {
         select: {
@@ -88,7 +98,7 @@ const getTransactions = async (mosqueId: string) => {
           phone: true,
         },
       },
-      monthlyFee: true,
+      monthlyPayment: true,
     },
     orderBy: {
       paymentDate: "desc",

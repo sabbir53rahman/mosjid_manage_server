@@ -6,8 +6,12 @@ import { userSafeSelect } from "../user/user.constants";
 import {
   ILoginUserPayload,
   IRegisterUserPayload,
+  IChangePasswordPayload,
+  IRefreshTokenPayload,
 } from "./auth.interface";
 import { prisma } from "../../lib/prisma";
+import { jwtHelpers } from "../../utils/jwt";
+import { envVars } from "../../../config/env";
 
 const registerUser = async (payload: IRegisterUserPayload) => {
   const { name, email, password, phone } = payload;
@@ -108,7 +112,66 @@ const loginUser = async (payload: ILoginUserPayload) => {
   };
 };
 
+const refreshToken = async (payload: IRefreshTokenPayload) => {
+  const { refreshToken } = payload;
+
+  const verifiedToken = jwtHelpers.verifyToken(
+    refreshToken,
+    envVars.JWT_REFRESH_TOKEN_SECRET,
+  );
+
+  if (!verifiedToken.success || !verifiedToken.data) {
+    throw new AppError(status.UNAUTHORIZED, "Invalid refresh token");
+  }
+
+  const user = verifiedToken.data;
+
+  const newAccessToken = tokenHelpers.getAccessToken({
+    userId: user.userId,
+    email: user.email,
+    role: user.role,
+    name: user.name,
+  });
+
+  return {
+    accessToken: newAccessToken,
+  };
+};
+
+const changePassword = async (userId: string, payload: IChangePasswordPayload) => {
+  const { currentPassword, newPassword } = payload;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) {
+    throw new AppError(status.NOT_FOUND, "User not found");
+  }
+
+  const isPasswordMatch = await bcrypt.compare(currentPassword, user.password);
+
+  if (!isPasswordMatch) {
+    throw new AppError(status.UNAUTHORIZED, "Current password is incorrect");
+  }
+
+  const hashedNewPassword = await bcrypt.hash(newPassword, 12);
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      password: hashedNewPassword,
+    },
+  });
+
+  return {
+    message: "Password changed successfully",
+  };
+};
+
 export const authService = {
   registerUser,
   loginUser,
+  refreshToken,
+  changePassword,
 };

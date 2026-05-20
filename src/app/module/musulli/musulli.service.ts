@@ -26,13 +26,13 @@ const getSingleMusulli = async (mosqueId: string, musulliId: string) => {
   const result = await prisma.musulli.findFirst({
     where: { id: musulliId, mosqueId },
     include: {
-      monthlyFees: {
+      monthlyPayments: {
         orderBy: [
           { year: "desc" },
           { month: "desc" },
         ],
       },
-      transactions: {
+      paymentLogs: {
         orderBy: { paymentDate: "desc" },
         take: 10,
       },
