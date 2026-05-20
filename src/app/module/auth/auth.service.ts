@@ -10,50 +10,58 @@ import {
 import { prisma } from "../../lib/prisma";
 
 const registerUser = async (payload: IRegisterUserPayload) => {
-  const { name, email, password, mosqueId } = payload;
+  const { name, email, password, phone } = payload;
 
-  const isUserExist = await prisma.admin.findUnique({
+  const isUserExist = await prisma.user.findUnique({
     where: { email },
   });
 
   if (isUserExist) {
     throw new AppError(
       status.BAD_REQUEST,
-      "Admin already exists with this email",
+      "User already exists with this email",
+    );
+  }
+
+  const isPhoneExist = await prisma.user.findUnique({
+    where: { phone },
+  });
+
+  if (isPhoneExist) {
+    throw new AppError(
+      status.BAD_REQUEST,
+      "User already exists with this phone",
     );
   }
 
   const hashedPassword = await bcrypt.hash(password, 12);
 
-  const admin = await prisma.admin.create({
+  const user = await prisma.user.create({
     data: {
       name,
+      phone,
       email,
       password: hashedPassword,
-      mosqueId,
-      role: "MOSQUE_ADMIN",
     },
     select: userSafeSelect,
   });
 
   const accessToken = tokenHelpers.getAccessToken({
-    userId: admin.id,
-    email: admin.email,
-    role: admin.role,
-    name: admin.name,
-    mosqueId: admin.mosqueId,
+    userId: user.id,
+    email: user.email,
+    role: user.role,
+    name: user.name,
   });
 
   const refreshToken = tokenHelpers.getRefreshToken({
-    userId: admin.id,
-    email: admin.email,
-    role: admin.role,
-    name: admin.name,
-    mosqueId: admin.mosqueId,
+    userId: user.id,
+    email: user.email,
+    role: user.role,
+    name: user.name,
   });
 
   return {
-    user: admin,
+    user: user,
     accessToken,
     refreshToken,
   };
@@ -62,46 +70,39 @@ const registerUser = async (payload: IRegisterUserPayload) => {
 const loginUser = async (payload: ILoginUserPayload) => {
   const { email, password } = payload;
 
-  const admin = await prisma.admin.findUnique({
+  const user = await prisma.user.findUnique({
     where: { email },
   });
 
-  if (!admin) {
-    throw new AppError(status.NOT_FOUND, "Admin not found");
+  if (!user) {
+    throw new AppError(status.NOT_FOUND, "User not found");
   }
 
-  if (!admin.isActive) {
-    throw new AppError(status.FORBIDDEN, "Admin account is inactive");
-  }
-
-  const isPasswordMatch = await bcrypt.compare(password, admin.password);
+  const isPasswordMatch = await bcrypt.compare(password, user.password);
 
   if (!isPasswordMatch) {
     throw new AppError(status.UNAUTHORIZED, "Invalid password");
   }
 
   const accessToken = tokenHelpers.getAccessToken({
-    userId: admin.id,
-    email: admin.email,
-    role: admin.role,
-    name: admin.name,
-    mosqueId: admin.mosqueId,
+    userId: user.id,
+    email: user.email,
+    role: user.role,
+    name: user.name,
   });
 
   const refreshToken = tokenHelpers.getRefreshToken({
-    userId: admin.id,
-    email: admin.email,
-    role: admin.role,
-    name: admin.name,
-    mosqueId: admin.mosqueId,
+    userId: user.id,
+    email: user.email,
+    role: user.role,
+    name: user.name,
   });
 
-  // Omit password from the returned admin object
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { password: _, ...adminWithoutPassword } = admin;
+  const { password: _, ...userWithoutPassword } = user;
 
   return {
-    user: adminWithoutPassword,
+    user: userWithoutPassword,
     accessToken,
     refreshToken,
   };

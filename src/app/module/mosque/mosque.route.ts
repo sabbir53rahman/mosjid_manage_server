@@ -8,16 +8,18 @@ const router = Router();
 
 router.post(
   "/",
-  checkAuth("SUPER_ADMIN"),
-  validateRequest(createMosqueSchema),
+  // checkAuth("MOSQUE_ADMIN"),
+  // validateRequest(createMosqueSchema),
   MosqueController.createMosque
 );
 
-router.get("/my-mosque", checkAuth("MOSQUE_ADMIN", "STAFF", "SUPER_ADMIN"), MosqueController.getMosqueDetails);
+router.get("/my-mosque/:ownerId",
+  // checkAuth("MOSQUE_ADMIN"),
+  MosqueController.getMosqueDetails);
 
 router.put(
   "/prayer-times",
-  checkAuth("MOSQUE_ADMIN", "STAFF"),
+  checkAuth("MOSQUE_ADMIN"),
   validateRequest(updatePrayerTimeSchema),
   MosqueController.updatePrayerTime
 );

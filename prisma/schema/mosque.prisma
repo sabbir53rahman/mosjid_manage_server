@@ -1,45 +1,47 @@
 model Mosque {
-  id              String        @id @default(cuid())
+  id String @id @default(cuid())
 
-  name            String
-  slug            String        @unique
+  ownerId String @unique
 
-  address         String
+  name String
 
-  phone           String?
-  email           String?
+  slug String @unique
 
-  logo            String?
+  address String
 
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  phone String?
 
-  admins          Admin[]
-  musullis        Musulli[]
-  prayerTime      PrayerTime?
+  logo String?
 
-  transactions    Transaction[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner User @relation(fields: [ownerId], references: [id])
+
+  musullis Musulli[]
+
+  prayerTime PrayerTime?
 }
 
 model PrayerTime {
-  id              String      @id @default(cuid())
+  id String @id @default(cuid())
 
-  mosqueId        String      @unique
+  mosqueId String @unique
 
-  fajr            String
+  fajr String
 
-  zuhr            String
+  zuhr String
 
-  asr             String
+  asr String
 
-  maghrib         String
+  maghrib String
 
-  isha            String
+  isha String
 
-  jummah          String?
+  jummah String?
 
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  mosque          Mosque      @relation(fields: [mosqueId], references: [id])
+  mosque Mosque @relation(fields: [mosqueId], references: [id], onDelete: Cascade)
 }

@@ -1,12 +1,20 @@
 import { z } from "zod";
 
+
+// export interface ICreateMosquePayload {
+//   name: string;
+//   slug: string;
+//   address: string;
+//   phone?: string;
+//   logo?: string;
+// }
+
 export const createMosqueSchema = z.object({
   body: z.object({
     name: z.string(),
-    slug: z.string(),
     address: z.string(),
+    slug: z.string(),
     phone: z.string().optional(),
-    email: z.string().email().optional(),
     logo: z.string().optional(),
   }),
 });

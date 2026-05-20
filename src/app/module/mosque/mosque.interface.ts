@@ -1,9 +1,9 @@
 export interface ICreateMosquePayload {
+  ownerId: string;
   name: string;
   slug: string;
   address: string;
   phone?: string;
-  email?: string;
   logo?: string;
 }
 

@@ -1,0 +1,46 @@
+model MonthlyPayment {
+  id String @id @default(cuid())
+
+  musulliId String
+
+  month Int
+  year  Int
+
+  expectedAmount Float
+
+  paidAmount Float @default(0)
+
+  dueAmount Float
+
+  status PaymentStatus @default(DUE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  musulli Musulli @relation(fields: [musulliId], references: [id], onDelete: Cascade)
+
+  paymentLogs PaymentLog[]
+
+  @@unique([musulliId, month, year])
+  @@index([musulliId])
+}
+
+model PaymentLog {
+  id String @id @default(cuid())
+
+  monthlyPaymentId String
+
+  amount Float
+
+  paymentDate DateTime
+
+  note String?
+
+  createdAt DateTime @default(now())
+
+  monthlyPayment MonthlyPayment @relation(fields: [monthlyPaymentId], references: [id], onDelete: Cascade)
+  musulli        Musulli?       @relation(fields: [musulliId], references: [id])
+  musulliId      String?
+
+  @@index([monthlyPaymentId])
+}

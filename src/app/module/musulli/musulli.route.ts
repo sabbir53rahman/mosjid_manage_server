@@ -8,18 +8,18 @@ const router = Router();
 
 router.post(
   "/",
-  checkAuth("MOSQUE_ADMIN", "STAFF"),
-  validateRequest(createMusulliSchema),
+  // checkAuth("MOSQUE_ADMIN"),
+  // validateRequest(createMusulliSchema),
   MusulliController.createMusulli
 );
 
-router.get("/", checkAuth("MOSQUE_ADMIN", "STAFF"), MusulliController.getMusullis);
+router.get("/", checkAuth("MOSQUE_ADMIN"), MusulliController.getMusullis);
 
-router.get("/:id", checkAuth("MOSQUE_ADMIN", "STAFF"), MusulliController.getSingleMusulli);
+router.get("/:id", checkAuth("MOSQUE_ADMIN"), MusulliController.getSingleMusulli);
 
 router.put(
   "/:id",
-  checkAuth("MOSQUE_ADMIN", "STAFF"),
+  checkAuth("MOSQUE_ADMIN"),
   validateRequest(updateMusulliSchema),
   MusulliController.updateMusulli
 );

@@ -3,10 +3,9 @@ import AppError from "../../errorHelpers/appError";
 import status from "http-status";
 import { ICreateMusulliPayload, IUpdateMusulliPayload } from "./musulli.interface";
 
-const createMusulli = async (mosqueId: string, payload: ICreateMusulliPayload) => {
+const createMusulli = async (payload: ICreateMusulliPayload) => {
   const result = await prisma.musulli.create({
     data: {
-      mosqueId,
       ...payload,
     },
   });

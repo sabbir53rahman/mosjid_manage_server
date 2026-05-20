@@ -1,33 +1,39 @@
 model Musulli {
-  id                  String        @id @default(cuid())
+  id String @id @default(cuid())
 
-  mosqueId            String
+  mosqueId String
 
-  name                String
+  linkedUserId String? @unique
 
-  phone               String
+  name String
 
-  image               String?
+  phone Int
 
-  monthlyFee          Float
+  image String?
 
-  startMonth          Int
-  startYear           Int
+  monthlyFee Float
 
-  paidTillMonth       Int?
-  paidTillYear        Int?
+  startMonth Int
+  startYear  Int
 
-  paymentDue          Float         @default(0)
+  paidTillMonth Int?
+  paidTillYear  Int?
 
-  isActive            Boolean       @default(true)
+  paymentDue Float @default(0)
 
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
+  isActive Boolean @default(true)
 
-  mosque              Mosque        @relation(fields: [mosqueId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  monthlyFees         MonthlyFee[]
-  transactions        Transaction[]
+  mosque Mosque @relation(fields: [mosqueId], references: [id], onDelete: Cascade)
+
+  linkedUser User? @relation(fields: [linkedUserId], references: [id])
+
+  monthlyPayments MonthlyPayment[]
+
+  paymentLogs PaymentLog[]
 
   @@index([mosqueId])
+  @@index([phone])
 }

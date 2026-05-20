@@ -1,10 +1,10 @@
 enum Role {
+  USER
   SUPER_ADMIN
   MOSQUE_ADMIN
-  STAFF
 }
 
-enum MonthlyStatus {
+enum PaymentStatus {
   PAID
   PARTIAL
   DUE

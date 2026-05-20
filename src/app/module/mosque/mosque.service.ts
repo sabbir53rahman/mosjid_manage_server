@@ -2,6 +2,7 @@ import { prisma } from "../../lib/prisma";
 import AppError from "../../errorHelpers/appError";
 import status from "http-status";
 import { ICreateMosquePayload, IUpdatePrayerTimePayload } from "./mosque.interface";
+import { Role } from "../../../generated/prisma/enums";
 
 const createMosque = async (payload: ICreateMosquePayload) => {
   const existingMosque = await prisma.mosque.findUnique({
@@ -16,18 +17,24 @@ const createMosque = async (payload: ICreateMosquePayload) => {
     data: payload,
   });
 
+  await prisma.user.update({
+    where: { id: payload.ownerId },
+    data: {
+      role: Role.MOSQUE_ADMIN,
+    },
+  });
+
   return result;
 };
 
-const getMosqueDetails = async (mosqueId: string) => {
+const getMosqueDetails = async (ownerId: string) => {
   const mosque = await prisma.mosque.findUnique({
-    where: { id: mosqueId },
+    where: { ownerId },
     include: {
       prayerTime: true,
       _count: {
         select: {
           musullis: true,
-          admins: true,
         },
       },
     },

@@ -5,8 +5,7 @@ import status from "http-status";
 import { MusulliService } from "./musulli.service";
 
 const createMusulli = catchAsync(async (req: Request, res: Response) => {
-  const mosqueId = req.user.mosqueId;
-  const result = await MusulliService.createMusulli(mosqueId, req.body);
+  const result = await MusulliService.createMusulli(req.body);
 
   sendResponse(res, {
     httpStatusCode: status.CREATED,
