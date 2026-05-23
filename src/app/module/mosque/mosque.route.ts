@@ -8,8 +8,8 @@ const router = Router();
 
 router.post(
   "/",
-  // checkAuth("MOSQUE_ADMIN"),
-  // validateRequest(createMosqueSchema),
+  checkAuth(),
+  validateRequest(createMosqueSchema),
   MosqueController.createMosque
 );
 

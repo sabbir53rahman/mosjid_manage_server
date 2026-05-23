@@ -8,7 +8,11 @@ const router = Router();
 
 router.post(
   "/collect",
+<<<<<<< HEAD
   checkAuth("MOSQUE_ADMIN", ),
+=======
+  checkAuth("MOSQUE_ADMIN"),
+>>>>>>> b5cfe3b147db0af18480da9601526a66c9d2163e
   validateRequest(collectFeeSchema),
   TransactionController.collectFee
 );

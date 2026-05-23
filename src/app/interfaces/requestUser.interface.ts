@@ -5,4 +5,5 @@ export interface IRequestUser {
   role: Role;
   email: string;
   name: string;
+  mosqueId?: string;
 }
