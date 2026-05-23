@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from "../../lib/prisma";
 import AppError from "../../errorHelpers/appError";
 import status from "http-status";
@@ -47,6 +48,57 @@ const getMosqueDetails = async (ownerId: string) => {
   return mosque;
 };
 
+// search with name
+
+const getAllMosques = async (search?: string,  page?: string) => {
+  const whereClause: any = {};
+  const pageNumber = Number(page || 1);
+  const limitNumber = 10;
+  const skip = (pageNumber - 1) * limitNumber;
+
+  if (search) {
+    whereClause.name = {
+      contains: search,
+      mode: "insensitive",
+    };
+  }
+
+  const mosques = await prisma.mosque.findMany({
+    where: whereClause,
+    take: limitNumber,
+    skip: skip,
+    include: {
+      prayerTime: true,
+      owner: {
+        select: {
+          name: true,
+          email: true,
+          phone: true,
+        },
+      },
+      _count: {
+        select: {
+          musullis: true,
+        },
+      },
+    },
+  });
+
+  const total = await prisma.mosque.count({
+    where: whereClause,
+  });
+
+  return {
+    meta: {
+      page: pageNumber,
+      limit: limitNumber,
+      total,
+      totalPage: Math.ceil(total / limitNumber),
+    },
+    data: mosques,
+  };
+};
+
 const updatePrayerTime = async (mosqueId: string, payload: IUpdatePrayerTimePayload) => {
   const mosque = await prisma.mosque.findUnique({
     where: { id: mosqueId },
@@ -77,6 +129,7 @@ const updatePrayerTime = async (mosqueId: string, payload: IUpdatePrayerTimePayl
 
 export const MosqueService = {
   createMosque,
+  getAllMosques,
   getMosqueDetails,
   updatePrayerTime,
 };

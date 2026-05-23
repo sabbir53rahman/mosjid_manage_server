@@ -13,26 +13,42 @@ const createMusulli = async (payload: ICreateMusulliPayload) => {
   return result;
 };
 
-const getMusullis = async (mosqueId: string) => {
+const getMusullis = async (adminId: string) => {
+  const mosque = await prisma.mosque.findUnique({
+    where: { ownerId: adminId },
+  });
+
+  if (!mosque) {
+    throw new AppError(status.NOT_FOUND, "Mosque not found for this admin");
+  }
+
   const result = await prisma.musulli.findMany({
-    where: { mosqueId },
+    where: { mosqueId: mosque.id },
     orderBy: { createdAt: "desc" },
   });
 
   return result;
 };
 
-const getSingleMusulli = async (mosqueId: string, musulliId: string) => {
+const getSingleMusulli = async (adminId: string, musulliId: string) => {
+  const mosque = await prisma.mosque.findUnique({
+    where: { ownerId: adminId },
+  });
+
+  if (!mosque) {
+    throw new AppError(status.NOT_FOUND, "Mosque not found for this admin");
+  }
+
   const result = await prisma.musulli.findFirst({
-    where: { id: musulliId, mosqueId },
+    where: { id: musulliId, mosqueId: mosque.id },
     include: {
-      monthlyFees: {
+      monthlyPayments: {
         orderBy: [
           { year: "desc" },
           { month: "desc" },
         ],
       },
-      transactions: {
+      paymentLogs: {
         orderBy: { paymentDate: "desc" },
         take: 10,
       },
@@ -46,9 +62,17 @@ const getSingleMusulli = async (mosqueId: string, musulliId: string) => {
   return result;
 };
 
-const updateMusulli = async (mosqueId: string, musulliId: string, payload: IUpdateMusulliPayload) => {
+const updateMusulli = async (adminId: string, musulliId: string, payload: IUpdateMusulliPayload) => {
+  const mosque = await prisma.mosque.findUnique({
+    where: { ownerId: adminId },
+  });
+
+  if (!mosque) {
+    throw new AppError(status.NOT_FOUND, "Mosque not found for this admin");
+  }
+
   const musulli = await prisma.musulli.findFirst({
-    where: { id: musulliId, mosqueId },
+    where: { id: musulliId, mosqueId: mosque.id },
   });
 
   if (!musulli) {

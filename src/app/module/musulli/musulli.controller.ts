@@ -16,8 +16,8 @@ const createMusulli = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getMusullis = catchAsync(async (req: Request, res: Response) => {
-  const mosqueId = req.user.mosqueId;
-  const result = await MusulliService.getMusullis(mosqueId);
+  const adminId = req.user.userId;
+  const result = await MusulliService.getMusullis(adminId);
 
   sendResponse(res, {
     httpStatusCode: status.OK,
@@ -28,9 +28,9 @@ const getMusullis = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingleMusulli = catchAsync(async (req: Request, res: Response) => {
-  const mosqueId = req.user.mosqueId;
+  const musulliId = req.user.userId;
   const id = req.params.id as string;
-  const result = await MusulliService.getSingleMusulli(mosqueId, id);
+  const result = await MusulliService.getSingleMusulli(musulliId, id);
 
   sendResponse(res, {
     httpStatusCode: status.OK,
@@ -41,9 +41,9 @@ const getSingleMusulli = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateMusulli = catchAsync(async (req: Request, res: Response) => {
-  const mosqueId = req.user.mosqueId;
+  const musulliId = req.user.userId;
   const id = req.params.id as string;
-  const result = await MusulliService.updateMusulli(mosqueId, id, req.body);
+  const result = await MusulliService.updateMusulli(musulliId, id, req.body);
 
   sendResponse(res, {
     httpStatusCode: status.OK,
