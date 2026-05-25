@@ -3,7 +3,6 @@ export interface ICreateMosquePayload {
   slug: string;
   address: string;
   phone?: string;
-  logo?: string;
 }
 
 export interface IUpdatePrayerTimePayload {

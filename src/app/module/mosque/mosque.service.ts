@@ -5,7 +5,7 @@ import status from "http-status";
 import { ICreateMosquePayload, IUpdatePrayerTimePayload } from "./mosque.interface";
 import { Role } from "../../../generated/prisma/enums";
 
-const createMosque = async (payload: ICreateMosquePayload, ownerId: string) => {
+const createMosque = async (payload: ICreateMosquePayload, ownerId: string, logoUrl?: string) => {
   const existingMosque = await prisma.mosque.findUnique({
     where: { slug: payload.slug },
   });
@@ -18,6 +18,7 @@ const createMosque = async (payload: ICreateMosquePayload, ownerId: string) => {
     data: {
       ...payload,
       ownerId,
+      logo : logoUrl,
     },
   });
 

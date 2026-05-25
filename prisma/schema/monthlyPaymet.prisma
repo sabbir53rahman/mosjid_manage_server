@@ -3,8 +3,7 @@ model MonthlyPayment {
 
   musulliId String
 
-  month Int
-  year  Int
+  billingMonth DateTime
 
   expectedAmount Float
 
@@ -21,8 +20,9 @@ model MonthlyPayment {
 
   paymentLogs PaymentLog[]
 
-  @@unique([musulliId, month, year])
+  @@unique([musulliId, billingMonth])
   @@index([musulliId])
+  @@index([billingMonth])
 }
 
 model PaymentLog {
@@ -30,17 +30,20 @@ model PaymentLog {
 
   monthlyPaymentId String
 
+  musulliId String
+
   amount Float
 
-  paymentDate DateTime
+  paymentDate DateTime @default(now())
 
   note String?
 
   createdAt DateTime @default(now())
 
   monthlyPayment MonthlyPayment @relation(fields: [monthlyPaymentId], references: [id], onDelete: Cascade)
-  musulli        Musulli?       @relation(fields: [musulliId], references: [id])
-  musulliId      String?
+
+  musulli Musulli @relation(fields: [musulliId], references: [id], onDelete: Cascade)
 
   @@index([monthlyPaymentId])
+  @@index([musulliId])
 }

@@ -3,10 +3,24 @@ import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import status from "http-status";
 import { MusulliService } from "./musulli.service";
+import { prisma } from "../../lib/prisma";
 import AppError from "../../errorHelpers/appError";
 
 const createMusulli = catchAsync(async (req: Request, res: Response) => {
-  const result = await MusulliService.createMusulli(req.body);
+  const adminId = req.user.userId;
+
+  const mosque = await prisma.mosque.findUnique({
+    where: { ownerId: adminId },
+  });
+
+  if (!mosque) {
+    throw new AppError(status.NOT_FOUND, "Mosque not found for this admin");
+  }
+
+  const result = await MusulliService.createMusulli({
+    ...req.body,
+    mosqueId: mosque.id,
+  });
 
   sendResponse(res, {
     httpStatusCode: status.CREATED,
@@ -17,16 +31,8 @@ const createMusulli = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getMusullis = catchAsync(async (req: Request, res: Response) => {
-<<<<<<< HEAD
   const adminId = req.user.userId;
   const result = await MusulliService.getMusullis(adminId);
-=======
-  const mosqueId = req.user.mosqueId;
-  if (!mosqueId) {
-    throw new AppError(status.BAD_REQUEST, "User is not associated with any mosque");
-  }
-  const result = await MusulliService.getMusullis(mosqueId);
->>>>>>> b5cfe3b147db0af18480da9601526a66c9d2163e
 
   sendResponse(res, {
     httpStatusCode: status.OK,
@@ -37,16 +43,9 @@ const getMusullis = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingleMusulli = catchAsync(async (req: Request, res: Response) => {
-<<<<<<< HEAD
-  const musulliId = req.user.userId;
-=======
-  const mosqueId = req.user.mosqueId;
-  if (!mosqueId) {
-    throw new AppError(status.BAD_REQUEST, "User is not associated with any mosque");
-  }
->>>>>>> b5cfe3b147db0af18480da9601526a66c9d2163e
+  const adminId = req.user.userId;
   const id = req.params.id as string;
-  const result = await MusulliService.getSingleMusulli(musulliId, id);
+  const result = await MusulliService.getSingleMusulli(adminId, id);
 
   sendResponse(res, {
     httpStatusCode: status.OK,
@@ -57,16 +56,9 @@ const getSingleMusulli = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateMusulli = catchAsync(async (req: Request, res: Response) => {
-<<<<<<< HEAD
-  const musulliId = req.user.userId;
-=======
-  const mosqueId = req.user.mosqueId;
-  if (!mosqueId) {
-    throw new AppError(status.BAD_REQUEST, "User is not associated with any mosque");
-  }
->>>>>>> b5cfe3b147db0af18480da9601526a66c9d2163e
+  const adminId = req.user.userId;
   const id = req.params.id as string;
-  const result = await MusulliService.updateMusulli(musulliId, id, req.body);
+  const result = await MusulliService.updateMusulli(adminId, id, req.body);
 
   sendResponse(res, {
     httpStatusCode: status.OK,
@@ -76,9 +68,109 @@ const updateMusulli = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const createMonthlyPayment = catchAsync(async (req: Request, res: Response) => {
+  const adminId = req.user.userId;
+  const musulliId = req.params.id as string;
+
+  const mosque = await prisma.mosque.findUnique({
+    where: { ownerId: adminId },
+  });
+
+  if (!mosque) {
+    throw new AppError(status.NOT_FOUND, "Mosque not found for this admin");
+  }
+
+  const musulli = await prisma.musulli.findFirst({
+    where: { id: musulliId, mosqueId: mosque.id },
+  });
+
+  if (!musulli) {
+    throw new AppError(status.NOT_FOUND, "Musulli not found in your mosque");
+  }
+
+  const result = await MusulliService.createMonthlyPayment({
+    musulliId,
+    billingMonth: req.body.billingMonth,
+    amount: req.body.amount,
+    note: req.body.note,
+  });
+
+  sendResponse(res, {
+    httpStatusCode: status.CREATED,
+    success: true,
+    message: "Monthly payment created successfully",
+    data: result,
+  });
+});
+
+const updateMonthlyPayment = catchAsync(async (req: Request, res: Response) => {
+  const monthlyPaymentId = req.params.monthlyPaymentId as string;
+  const result = await MusulliService.updateMonthlyPayment({
+    monthlyPaymentId,
+    amount: req.body.amount,
+    note: req.body.note,
+  });
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "Monthly payment updated successfully",
+    data: result,
+  });
+});
+
+const getMusulliPaymentSummary = catchAsync(async (req: Request, res: Response) => {
+  const musulliId = req.params.id as string;
+  const result = await MusulliService.getMusulliPaymentSummary(musulliId);
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "Musulli payment summary fetched successfully",
+    data: result,
+  });
+});
+
+const getMosquePaymentStats = catchAsync(async (req: Request, res: Response) => {
+  const adminId = req.user.userId;
+
+  const mosque = await prisma.mosque.findUnique({
+    where: { ownerId: adminId },
+  });
+
+  if (!mosque) {
+    throw new AppError(status.NOT_FOUND, "Mosque not found for this admin");
+  }
+
+  const result = await MusulliService.getMosquePaymentStats(mosque.id);
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "Mosque payment stats fetched successfully",
+    data: result,
+  });
+});
+
+const createMonthlyPaymentsForAll = catchAsync(async (req: Request, res: Response) => {
+  const result = await MusulliService.createMonthlyPaymentsForAllMusullis(req.body.billingMonth);
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "Monthly payments creation process completed",
+    data: result,
+  });
+});
+
 export const MusulliController = {
   createMusulli,
   getMusullis,
   getSingleMusulli,
   updateMusulli,
+  createMonthlyPayment,
+  updateMonthlyPayment,
+  getMusulliPaymentSummary,
+  getMosquePaymentStats,
+  createMonthlyPaymentsForAll,
 };

@@ -112,11 +112,6 @@ const loginUser = async (payload: ILoginUserPayload) => {
   };
 };
 
-<<<<<<< HEAD
-const getMe = async (id: string) => {
-  const user = await prisma.user.findUnique({
-    where: { id },
-=======
 const refreshToken = async (payload: IRefreshTokenPayload) => {
   const { refreshToken } = payload;
 
@@ -148,26 +143,11 @@ const changePassword = async (userId: string, payload: IChangePasswordPayload) =
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
->>>>>>> b5cfe3b147db0af18480da9601526a66c9d2163e
   });
 
   if (!user) {
     throw new AppError(status.NOT_FOUND, "User not found");
   }
-<<<<<<< HEAD
-// exept password from user
-  return {
-    id,
-    name: user.name,
-    email: user.email,
-    phone: user.phone,
-    image: user.image,
-    role: user.role,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt
-  };
-}
-=======
 
   const isPasswordMatch = await bcrypt.compare(currentPassword, user.password);
 
@@ -188,15 +168,32 @@ const changePassword = async (userId: string, payload: IChangePasswordPayload) =
     message: "Password changed successfully",
   };
 };
->>>>>>> b5cfe3b147db0af18480da9601526a66c9d2163e
+
+const getMe = async (userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: userSafeSelect,
+  });
+
+  if (!user) {
+    throw new AppError(status.NOT_FOUND, "User not found");
+  }
+
+  return {
+    name: user.name,
+    phone: user.phone,
+    email: user.email,
+    role: user.role,
+    id: user.id,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  };
+};
 
 export const authService = {
   registerUser,
   loginUser,
-<<<<<<< HEAD
-  getMe,
-=======
   refreshToken,
   changePassword,
->>>>>>> b5cfe3b147db0af18480da9601526a66c9d2163e
+  getMe,
 };

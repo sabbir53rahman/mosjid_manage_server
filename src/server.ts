@@ -1,6 +1,7 @@
 import app from "./app";
 import { envVars } from "./config/env";
 import { Request, Response } from "express";
+import { initCronJobs } from "./app/utils/cron";
 
 // For Vercel serverless deployment
 export default async function handler(req: Request, res: Response) {
@@ -11,6 +12,7 @@ export default async function handler(req: Request, res: Response) {
 if (process.env.NODE_ENV !== "production") {
   const bootstrap = async () => {
     try {
+      initCronJobs();
       app.listen(envVars.PORT, () => {
         console.log(`Server is running on PORT ${envVars.PORT}`);
       });

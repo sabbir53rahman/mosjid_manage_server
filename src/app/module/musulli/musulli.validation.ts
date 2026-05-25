@@ -6,10 +6,8 @@ export const createMusulliSchema = z.object({
     phone: z.string(),
     image: z.string().optional(),
     monthlyFee: z.number().min(0),
-    startMonth: z.number().min(1).max(12),
-    startYear: z.number(),
-    paidTillMonth: z.number().min(1).max(12).optional(),
-    paidTillYear: z.number().optional(),
+    joinedAt: z.string().or(z.date()),
+    paidTill: z.string().or(z.date()).optional(),
     paymentDue: z.number().optional(),
     isActive: z.boolean().optional(),
   }),
@@ -21,6 +19,30 @@ export const updateMusulliSchema = z.object({
     phone: z.string().optional(),
     image: z.string().optional(),
     monthlyFee: z.number().min(0).optional(),
+    joinedAt: z.string().or(z.date()).optional(),
+    paidTill: z.string().or(z.date()).optional(),
+    paymentDue: z.number().optional(),
     isActive: z.boolean().optional(),
+  }),
+});
+
+export const createMonthlyPaymentSchema = z.object({
+  body: z.object({
+    billingMonth: z.string().or(z.date()),
+    amount: z.number().min(0).optional(),
+    note: z.string().optional(),
+  }),
+});
+
+export const updateMonthlyPaymentSchema = z.object({
+  body: z.object({
+    amount: z.number().min(1),
+    note: z.string().optional(),
+  }),
+});
+
+export const createMonthlyPaymentsForAllSchema = z.object({
+  body: z.object({
+    billingMonth: z.string().or(z.date()),
   }),
 });

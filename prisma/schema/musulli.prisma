@@ -7,17 +7,15 @@ model Musulli {
 
   name String
 
-  phone Int
+  phone String
 
   image String?
 
   monthlyFee Float
 
-  startMonth Int
-  startYear  Int
+  joinedAt DateTime
 
-  paidTillMonth Int?
-  paidTillYear  Int?
+  paidTill DateTime?
 
   paymentDue Float @default(0)
 

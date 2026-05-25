@@ -11,7 +11,6 @@ const createMosque = catchAsync(async (req: Request, res: Response) => {
   if (!ownerId) {
     throw new AppError(status.NOT_FOUND, "User not found");
   }
-<<<<<<< HEAD
 
   const { logo, ...mosqueData } = req.body;
   let logoUrl: string | undefined;
@@ -20,15 +19,12 @@ const createMosque = catchAsync(async (req: Request, res: Response) => {
     const uploadResult = await uploadFileToCloudinary(logo, "mosque-logos");
     logoUrl = uploadResult.secure_url;
   }
-
-  const result = await MosqueService.createMosque({
-    ...mosqueData,
+console.log(logoUrl, '........' ,mosqueData)
+  const result = await MosqueService.createMosque(
+    mosqueData,
     ownerId,
-    logo: logoUrl,
-  });
-=======
-  const result = await MosqueService.createMosque(req.body, ownerId);
->>>>>>> b5cfe3b147db0af18480da9601526a66c9d2163e
+    logoUrl,
+  );
 
   sendResponse(res, {
     httpStatusCode: status.CREATED,
@@ -39,14 +35,9 @@ const createMosque = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getMosqueDetails = catchAsync(async (req: Request, res: Response) => {
-<<<<<<< HEAD
   // Using the mosqueId from the logged-in admin's token
   const ownerId = req.user.userId;
   const result = await MosqueService.getMosqueDetails(ownerId as string);
-=======
-  const ownerId = req.user.userId;
-  const result = await MosqueService.getMosqueDetails(ownerId);
->>>>>>> b5cfe3b147db0af18480da9601526a66c9d2163e
 
   sendResponse(res, {
     httpStatusCode: status.OK,
