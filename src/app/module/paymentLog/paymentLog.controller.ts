@@ -4,14 +4,14 @@ import { sendResponse } from "../../shared/sendResponse";
 import status from "http-status";
 import { PaymentLogService } from "./paymentLog.service";
 
-const collectFee = catchAsync(async (req: Request, res: Response) => {
+const collectPayment = catchAsync(async (req: Request, res: Response) => {
   const adminId = req.user.userId;
-  const result = await PaymentLogService.collectFee(adminId, req.body);
+  const result = await PaymentLogService.collectPayment(adminId, req.body);
 
   sendResponse(res, {
     httpStatusCode: status.CREATED,
     success: true,
-    message: "Fee collected successfully",
+    message: "Payment collected successfully",
     data: result,
   });
 });
@@ -29,6 +29,6 @@ const getPaymentLogs = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const PaymentLogController = {
-  collectFee,
+  collectPayment,
   getPaymentLogs,
 };

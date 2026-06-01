@@ -1,6 +1,6 @@
-export interface ICollectFeePayload {
-  monthlyPaymentId: string;
+export interface ICollectPaymentPayload {
+  musulliId: string;
   amount: number;
-  month : Date;
+  paidMonth: Date | string;
   note?: string;
 }

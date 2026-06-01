@@ -11,6 +11,6 @@ router.use("/auth", AuthRoutes);
 router.use("/users", UserRoutes);
 router.use("/mosques", MosqueRoutes);
 router.use("/musullis", MusulliRoutes);
-router.use("/paymentLogs", PaymentLogRoutes);
+router.use("/payments", PaymentLogRoutes);
 
 export const IndexRoutes = router;

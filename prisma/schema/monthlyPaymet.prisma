@@ -1,49 +1,53 @@
-model MonthlyPayment {
+model Musulli {
   id String @id @default(cuid())
 
-  musulliId String
+  mosqueId String
 
-  billingMonth DateTime
+  name String
 
-  expectedAmount Float
+  phone String
 
-  paidAmount Float @default(0)
+  address String?
 
-  dueAmount Float
+  image String?
 
-  status PaymentStatus @default(DUE)
+  monthlyFee Float
+
+  joinedAt DateTime
+
+  totalPaid Float @default(0)
+
+  isActive Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  musulli Musulli @relation(fields: [musulliId], references: [id], onDelete: Cascade)
+  mosque Mosque @relation(fields: [mosqueId], references: [id], onDelete: Cascade)
 
   paymentLogs PaymentLog[]
 
-  @@unique([musulliId, billingMonth])
-  @@index([musulliId])
-  @@index([billingMonth])
+  @@index([mosqueId])
+  @@index([phone])
 }
 
 model PaymentLog {
   id String @id @default(cuid())
 
-  monthlyPaymentId String
-
   musulliId String
 
   amount Float
 
-  paymentDate DateTime @default(now())
+  paidMonth DateTime
 
   note String?
 
-  createdAt DateTime @default(now())
+  paymentDate DateTime @default(now())
 
-  monthlyPayment MonthlyPayment @relation(fields: [monthlyPaymentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 
   musulli Musulli @relation(fields: [musulliId], references: [id], onDelete: Cascade)
 
-  @@index([monthlyPaymentId])
+  @@unique([musulliId, paidMonth])
   @@index([musulliId])
+  @@index([paidMonth])
 }

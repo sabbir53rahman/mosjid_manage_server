@@ -1,9 +1,10 @@
 import { z } from "zod";
 
-export const collectFeeSchema = z.object({
+export const collectPaymentSchema = z.object({
   body: z.object({
-    monthlyPaymentId: z.string(),
+    musulliId: z.string(),
     amount: z.number().min(1),
+    paidMonth: z.string().or(z.date()),
     note: z.string().optional(),
   }),
 });
