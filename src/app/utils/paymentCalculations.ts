@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   startOfMonth,
   isBefore,
@@ -5,6 +6,16 @@ import {
   addMonths,
   format,
 } from "date-fns";
+import { Musulli, PaymentLog } from "../../generated/prisma/client";
+
+export interface MusulliWithCalculations extends Musulli {
+  totalMonths: number;
+  expectedAmount: number;
+  dueAmount: number;
+  paidMonths: number;
+  paidTill: Date | null;
+  dueMonths: string[];
+}
 
 export const calculateTotalMonths = (joinedAt: Date): number => {
   const now = new Date();
@@ -54,7 +65,9 @@ export const getDueMonths = (
   return dueMonths;
 };
 
-export const getMusulliWithCalculations = (musulli: any) => {
+export const getMusulliWithCalculations = (
+  musulli: Musulli & { paymentLogs?: PaymentLog[] }
+): MusulliWithCalculations => {
   const currentDate = new Date();
   const joinedDate = new Date(musulli.joinedAt);
 
@@ -67,7 +80,7 @@ export const getMusulliWithCalculations = (musulli: any) => {
   const dueAmount = Math.max(expectedAmount - musulli.totalPaid, 0);
   const paidMonths = Math.floor(musulli.totalPaid / musulli.monthlyFee);
 
-  let paidTill = null;
+  let paidTill: Date | null = null;
   if (paidMonths > 0) {
     const paidDate = new Date(joinedDate);
     paidDate.setMonth(joinedDate.getMonth() + paidMonths - 1);

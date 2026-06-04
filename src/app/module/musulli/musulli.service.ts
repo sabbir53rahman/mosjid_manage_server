@@ -3,9 +3,9 @@ import { prisma } from "../../lib/prisma";
 import AppError from "../../errorHelpers/appError";
 import status from "http-status";
 import { ICreateMusulliPayload, IUpdateMusulliPayload } from "./musulli.interface";
-import { getMusulliWithCalculations } from "../../utils/paymentCalculations";
+import { getMusulliWithCalculations, MusulliWithCalculations } from "../../utils/paymentCalculations";
 
-const createMusulli = async (payload: ICreateMusulliPayload) => {
+const createMusulli = async (payload: ICreateMusulliPayload): Promise<MusulliWithCalculations> => {
   const result = await prisma.musulli.create({
     data: {
       ...payload,
@@ -16,7 +16,7 @@ const createMusulli = async (payload: ICreateMusulliPayload) => {
   return getMusulliWithCalculations(result);
 };
 
-const getMusullis = async (adminId: string) => {
+const getMusullis = async (adminId: string): Promise<MusulliWithCalculations[]> => {
   const mosque = await prisma.mosque.findUnique({
     where: { ownerId: adminId },
   });
@@ -33,7 +33,7 @@ const getMusullis = async (adminId: string) => {
   return musullis.map(getMusulliWithCalculations);
 };
 
-const getSingleMusulli = async (adminId: string, musulliId: string) => {
+const getSingleMusulli = async (adminId: string, musulliId: string): Promise<MusulliWithCalculations> => {
   const mosque = await prisma.mosque.findUnique({
     where: { ownerId: adminId },
   });
@@ -58,7 +58,7 @@ const getSingleMusulli = async (adminId: string, musulliId: string) => {
   return getMusulliWithCalculations(result);
 };
 
-const updateMusulli = async (adminId: string, musulliId: string, payload: IUpdateMusulliPayload) => {
+const updateMusulli = async (adminId: string, musulliId: string, payload: IUpdateMusulliPayload): Promise<MusulliWithCalculations> => {
   const mosque = await prisma.mosque.findUnique({
     where: { ownerId: adminId },
   });
@@ -88,7 +88,7 @@ const updateMusulli = async (adminId: string, musulliId: string, payload: IUpdat
   return getMusulliWithCalculations(result);
 };
 
-const deleteMusulli = async (adminId: string, musulliId: string) => {
+const deleteMusulli = async (adminId: string, musulliId: string): Promise<{ message: string }> => {
   const mosque = await prisma.mosque.findUnique({
     where: { ownerId: adminId },
   });
