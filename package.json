@@ -5,7 +5,7 @@
   "main": "dist/src/server.js",
   "packageManager": "npm@10.9.2",
   "scripts": {
-    "prisma:generate": "cross-env NODE_ENV=production prisma generate",
+    "prisma:generate": "prisma generate",
     "start": "node dist/src/server.js",
     "build": "prisma generate && tsc && node scripts/fix-imports.js",
     "migrate": "prisma migrate dev",
@@ -15,7 +15,7 @@
     "pull": "prisma db pull",
     "lint": "eslint ./src/**/*",
     "dev": "tsx watch src/server.ts",
-    "postinstall": "cross-env NODE_ENV=production prisma generate"
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -34,6 +34,7 @@
     "http-status": "^2.1.0",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.18.0",
+    "prisma": "^7.3.0",
     "qs": "^6.15.0",
     "stripe": "^20.4.0",
     "zod": "^4.3.6"
@@ -48,9 +49,7 @@
     "@types/node": "^25.2.2",
     "@types/pg": "^8.16.0",
     "@types/qs": "^6.14.0",
-    "cross-env": "^10.1.0",
     "eslint": "^10.0.0",
-    "prisma": "^7.3.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.54.0"
