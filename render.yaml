@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: mosjid-manage-server
+    runtime: node
+    buildCommand: npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mosjid-manage-db
+          property: connectionString
+
+databases:
+  - name: mosjid-manage-db
+    databaseName: mosjid_manage
+    user: mosjid_manage_user
+    plan: free

@@ -4,20 +4,19 @@ import { Request, Response } from "express";
 
 // For Vercel serverless deployment
 export default async function handler(req: Request, res: Response) {
-  app(req, res);
+  await app(req, res);
 }
 
-// For local development
-if (process.env.NODE_ENV !== "production") {
-  const bootstrap = async () => {
-    try {
-      app.listen(envVars.PORT, () => {
-        console.log(`Server is running on PORT ${envVars.PORT}`);
-      });
-    } catch (err) {
-      console.error("Failed to start server:", err);
-    }
-  };
+// For local development & Render
+const bootstrap = async () => {
+  try {
+    const PORT = envVars.PORT || "10000";
+    app.listen(PORT, () => {
+      console.log(`Server is running on PORT ${PORT}`);
+    });
+  } catch (err) {
+    console.error("Failed to start server:", err);
+  }
+};
 
-  bootstrap();
-}
+bootstrap();
