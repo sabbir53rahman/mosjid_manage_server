@@ -7,9 +7,7 @@
   "scripts": {
     "prisma:generate": "prisma generate",
     "start": "node dist/src/server.js",
-
     "build": "prisma generate && tsc ",
-
     "migrate": "prisma migrate dev",
     "generate": "prisma generate",
     "studio": "prisma studio",

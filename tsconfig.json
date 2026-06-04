@@ -5,7 +5,7 @@
     "target": "es2023",
     "rootDir": "./",
     "outDir": "./dist",
-    "types": ["node", "express"],
+    "types": ["node", ],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
