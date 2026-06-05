@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { AuthRoutes } from "../module/auth/auth.route";
-import { UserRoutes } from "../module/user/user.route";
-import { MosqueRoutes } from "../module/mosque/mosque.route";
-import { MusulliRoutes } from "../module/musulli/musulli.route";
-import { PaymentLogRoutes } from "../module/paymentLog/paymentLog.route";
+import { AuthRoutes } from "../module/auth/auth.route.js";
+import { UserRoutes } from "../module/user/user.route.js";
+import { MosqueRoutes } from "../module/mosque/mosque.route.js";
+import { MusulliRoutes } from "../module/musulli/musulli.route.js";
+import { PaymentLogRoutes } from "../module/paymentLog/paymentLog.route.js";
 
 const router = Router();
 

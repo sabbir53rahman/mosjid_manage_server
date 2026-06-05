@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { catchAsync } from "../../shared/catchAsync";
-import { sendResponse } from "../../shared/sendResponse";
+import { catchAsync } from "../../shared/catchAsync.js";
+import { sendResponse } from "../../shared/sendResponse.js";
 import status from "http-status";
-import { PaymentLogService } from "./paymentLog.service";
+import { PaymentLogService } from "./paymentLog.service.js";
 
 const collectPayment = catchAsync(async (req: Request, res: Response) => {
   const adminId = req.user.userId;

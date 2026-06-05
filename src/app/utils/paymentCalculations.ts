@@ -6,7 +6,7 @@ import {
   addMonths,
   format,
 } from "date-fns";
-import { Musulli, PaymentLog } from "../../generated/prisma/client";
+import type { Musulli, PaymentLog } from "../../generated/prisma/client.js";
 
 export interface MusulliWithCalculations extends Musulli {
   totalMonths: number;
@@ -44,11 +44,11 @@ export const calculatePaidMonths = (monthlyFee: number, totalPaid: number): numb
 
 export const getDueMonths = (
   joinedAt: Date,
-  paymentLogs: { paidMonth: Date }[]
+  paymentLogs: { paidMonth: Date }[],
 ): string[] => {
   const paidMonthsSet = new Set(
-    paymentLogs.map((log) => format(log.paidMonth, "yyyy-MM"))
-  );
+    paymentLogs.map((log) => format(log.paidMonth, "yyyy-MM"),
+  ));
 
   const dueMonths: string[] = [];
   let current = startOfMonth(new Date(joinedAt));
@@ -66,7 +66,7 @@ export const getDueMonths = (
 };
 
 export const getMusulliWithCalculations = (
-  musulli: Musulli & { paymentLogs?: PaymentLog[] }
+  musulli: Musulli & { paymentLogs?: PaymentLog[] },
 ): MusulliWithCalculations => {
   const currentDate = new Date();
   const joinedDate = new Date(musulli.joinedAt);
@@ -89,7 +89,7 @@ export const getMusulliWithCalculations = (
 
   const dueMonths = getDueMonths(
     musulli.joinedAt,
-    musulli.paymentLogs || []
+    musulli.paymentLogs || [],
   );
 
   return {

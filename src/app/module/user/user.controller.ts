@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { catchAsync } from "../../shared/catchAsync";
-import { UserService } from "./user.service";
-import { sendResponse } from "../../shared/sendResponse";
+import { catchAsync } from "../../shared/catchAsync.js";
+import { UserService } from "./user.service.js";
+import { sendResponse } from "../../shared/sendResponse.js";
 import status from "http-status";
 
 const getMyProfile = catchAsync(async (req: Request, res: Response) => {

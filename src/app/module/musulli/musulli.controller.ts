@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { catchAsync } from "../../shared/catchAsync";
-import { sendResponse } from "../../shared/sendResponse";
+import { catchAsync } from "../../shared/catchAsync.js";
+import { sendResponse } from "../../shared/sendResponse.js";
 import status from "http-status";
-import { MusulliService } from "./musulli.service";
-import { prisma } from "../../lib/prisma";
-import AppError from "../../errorHelpers/appError";
+import { MusulliService } from "./musulli.service.js";
+import { prisma } from "../../lib/prisma.js";
+import AppError from "../../errorHelpers/appError.js";
 
 const createMusulli = catchAsync(async (req: Request, res: Response) => {
   const adminId = req.user.userId;

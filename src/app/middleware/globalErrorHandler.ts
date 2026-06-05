@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
-import { envVars } from "../../config/env";
+import { envVars } from "../../config/env.js";
 import status from "http-status";
 import z from "zod";
-import { TErrorResponse, TErrorSources } from "../interfaces/error.interface";
-import { handleZodError } from "../errorHelpers/handleZodError";
-import AppError from "../errorHelpers/appError";
-import { deleteFileFromCloudinary } from "../../config/cloudinary.config";
-import { deleteUploadedFilesFromGlobalErrorHandler } from "../utils/deleteUploadedFilesFromGlobalErrorHandler";
+import { TErrorResponse, TErrorSources } from "../interfaces/error.interface.js";
+import { handleZodError } from "../errorHelpers/handleZodError.js";
+import AppError from "../errorHelpers/appError.js";
+import { deleteFileFromCloudinary } from "../../config/cloudinary.config.js";
+import { deleteUploadedFilesFromGlobalErrorHandler } from "../utils/deleteUploadedFilesFromGlobalErrorHandler.js";
 
 export const globalErrorHandler = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
