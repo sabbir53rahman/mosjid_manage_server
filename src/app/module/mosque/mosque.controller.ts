@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { catchAsync } from "../../shared/catchAsync";
-import { sendResponse } from "../../shared/sendResponse";
+import { catchAsync } from "../../shared/catchAsync.js";
+import { sendResponse } from "../../shared/sendResponse.js";
 import status from "http-status";
-import { MosqueService } from "./mosque.service";
-import { uploadFileToCloudinary } from "../../../config/cloudinary.config";
-import AppError from "../../errorHelpers/appError";
+import { MosqueService } from "./mosque.service.js";
+import { uploadFileToCloudinary } from "../../../config/cloudinary.config.js";
+import AppError from "../../errorHelpers/appError.js";
 
 const createMosque = catchAsync(async (req: Request, res: Response) => {
   const ownerId = req.user?.userId;

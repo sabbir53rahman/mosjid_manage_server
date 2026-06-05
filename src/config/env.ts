@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import AppError from "../app/errorHelpers/appError";
+import AppError from "../app/errorHelpers/appError.js";
 import status from "http-status";
 
 // Load env only when not in production (Vercel already provides env)

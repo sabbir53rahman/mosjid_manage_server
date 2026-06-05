@@ -6,7 +6,7 @@ import {
   addMonths,
   format,
 } from "date-fns";
-import { Musulli, PaymentLog } from "../../generated/prisma/client";
+import type { Musulli, PaymentLog } from "../../generated/prisma/client.js";
 
 export interface MusulliWithCalculations extends Musulli {
   totalMonths: number;
