@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { MusulliController } from "./musulli.controller.js";
-import { checkAuth } from "../../middleware/checkAuth.js";
+import { MusulliController } from "./musulli.controller";
+import { checkAuth } from "../../middleware/checkAuth";
 import {
-} from "./musulli.validation.js";
+} from "./musulli.validation";
 
 const router = Router();
 

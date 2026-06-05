@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from "express";
 import status from "http-status";
-import AppError from "../errorHelpers/appError.js";
-import { cookieHelpers } from "../utils/cookie.js";
-import { jwtHelpers } from "../utils/jwt.js";
-import { envVars } from "../../config/env.js";
-import { Role } from "../../generated/prisma/enums.js";
-import { prisma } from "../lib/prisma.js";
+import AppError from "../errorHelpers/appError";
+import { cookieHelpers } from "../utils/cookie";
+import { jwtHelpers } from "../utils/jwt";
+import { envVars } from "../../config/env";
+import { Role } from "../../generated/prisma/enums";
+import { prisma } from "../lib/prisma";
 
 export const checkAuth =
   (...authRoles: Role[]) =>

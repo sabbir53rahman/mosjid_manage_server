@@ -1,5 +1,5 @@
-import { prisma } from "../../lib/prisma.js";
-import { userSafeSelect } from "./user.constants.js";
+import { prisma } from "../../lib/prisma";
+import { userSafeSelect } from "./user.constants";
 
 const getMyProfile = async (userId: string) => {
   const result = await prisma.user.findUnique({

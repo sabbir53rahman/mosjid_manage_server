@@ -1,6 +1,6 @@
-import { envVars } from "../../config/env.js";
-import { Role } from "../../generated/prisma/enums.js";
-import { prisma } from "../lib/prisma.js";
+import { envVars } from "../../config/env";
+import { Role } from "../../generated/prisma/enums";
+import { prisma } from "../lib/prisma";
 import bcrypt from "bcryptjs";
 
 export const seedSuperAdmin = async () => {

@@ -1,17 +1,17 @@
 import status from "http-status";
-import AppError from "../../errorHelpers/appError.js";
-import { tokenHelpers } from "../../utils/token.js";
+import AppError from "../../errorHelpers/appError";
+import { tokenHelpers } from "../../utils/token";
 import bcrypt from "bcryptjs";
-import { userSafeSelect } from "../user/user.constants.js";
+import { userSafeSelect } from "../user/user.constants";
 import {
   ILoginUserPayload,
   IRegisterUserPayload,
   IChangePasswordPayload,
   IRefreshTokenPayload,
-} from "./auth.interface.js";
-import { prisma } from "../../lib/prisma.js";
-import { jwtHelpers } from "../../utils/jwt.js";
-import { envVars } from "../../../config/env.js";
+} from "./auth.interface";
+import { prisma } from "../../lib/prisma";
+import { jwtHelpers } from "../../utils/jwt";
+import { envVars } from "../../../config/env";
 
 const registerUser = async (payload: IRegisterUserPayload) => {
   const { name, email, password, phone } = payload;

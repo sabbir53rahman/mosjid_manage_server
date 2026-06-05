@@ -1,4 +1,4 @@
-import { IRequestUser } from "./requestUser.interface.js";
+import { IRequestUser } from "./requestUser.interface";
 import { NextFunction } from "express";
 
 declare global {

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { prisma } from "../../lib/prisma.js";
-import AppError from "../../errorHelpers/appError.js";
+import { prisma } from "../../lib/prisma";
+import AppError from "../../errorHelpers/appError";
 import status from "http-status";
-import { ICreateMosquePayload, IUpdatePrayerTimePayload } from "./mosque.interface.js";
-import { Role } from "../../../generated/prisma/enums.js";
+import { ICreateMosquePayload, IUpdatePrayerTimePayload } from "./mosque.interface";
+import { Role } from "../../../generated/prisma/enums";
 
 const createMosque = async (payload: ICreateMosquePayload, ownerId: string, logoUrl?: string) => {
   const existingMosque = await prisma.mosque.findUnique({

@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { catchAsync } from "../../shared/catchAsync.js";
-import { authService } from "./auth.service.js";
-import { sendResponse } from "../../shared/sendResponse.js";
+import { catchAsync } from "../../shared/catchAsync";
+import { authService } from "./auth.service";
+import { sendResponse } from "../../shared/sendResponse";
 import status from "http-status";
-import { tokenHelpers } from "../../utils/token.js";
+import { tokenHelpers } from "../../utils/token";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const result = await authService.registerUser(req.body);

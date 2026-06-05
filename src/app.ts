@@ -1,11 +1,11 @@
 import express, { Application, Request, Response } from "express";
-import { IndexRoutes } from "./app/routes/index.js";
-import { globalErrorHandler } from "./app/middleware/globalErrorHandler.js";
-import { notFound } from "./app/middleware/notFound.js";
+import { IndexRoutes } from "./app/routes";
+import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
+import { notFound } from "./app/middleware/notFound";
 import cookieParser from "cookie-parser";
 import path from "path";
 import cors from "cors";
-import { envVars } from "./config/env.js";
+import { envVars } from "./config/env";
 import qs from "qs";
 
 const app: Application = express();
@@ -14,7 +14,7 @@ app.set("query parser", (str: string) => qs.parse(str));
 
 app.set("view engine", "ejs");
 
-app.set("views", path.resolve(process.cwd(), "src/app/templates"));
+app.set("views", path.resolve(process.cwd(), `src/app/templates`));
 
 app.use(
   cors({
