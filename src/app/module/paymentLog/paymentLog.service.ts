@@ -1,8 +1,8 @@
-import { prisma } from "../../lib/prisma.js";
-import AppError from "../../errorHelpers/appError.js";
+import { prisma } from "../../lib/prisma";
+import AppError from "../../errorHelpers/appError";
 import status from "http-status";
-import { ICollectPaymentPayload } from "./paymentLog.interface.js";
-import { getMusulliWithCalculations } from "../../utils/paymentCalculations.js";
+import { ICollectPaymentPayload } from "./paymentLog.interface";
+import { getMusulliWithCalculations } from "../../utils/paymentCalculations";
 
 const collectPayment = async (
   adminId: string,

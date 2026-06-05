@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { prisma } from "../../lib/prisma.js";
-import AppError from "../../errorHelpers/appError.js";
+import { prisma } from "../../lib/prisma";
+import AppError from "../../errorHelpers/appError";
 import status from "http-status";
-import { ICreateMusulliPayload, IUpdateMusulliPayload } from "./musulli.interface.js";
-import { getMusulliWithCalculations, MusulliWithCalculations } from "../../utils/paymentCalculations.js";
+import { ICreateMusulliPayload, IUpdateMusulliPayload } from "./musulli.interface";
+import { getMusulliWithCalculations, MusulliWithCalculations } from "../../utils/paymentCalculations";
 
 const createMusulli = async (payload: ICreateMusulliPayload): Promise<MusulliWithCalculations> => {
   const result = await prisma.musulli.create({

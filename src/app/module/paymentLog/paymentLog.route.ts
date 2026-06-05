@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { PaymentLogController } from "./paymentLog.controller.js";
-import { checkAuth } from "../../middleware/checkAuth.js";
+import { PaymentLogController } from "./paymentLog.controller";
+import { checkAuth } from "../../middleware/checkAuth";
 
 const router = Router();
 

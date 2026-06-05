@@ -1,5 +1,5 @@
-import app from "./app.js";
-import { envVars } from "./config/env.js";
+import app from "./app";
+import { envVars } from "./config/env";
 import { Request, Response } from "express";
 
 // For Vercel serverless deployment

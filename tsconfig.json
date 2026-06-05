@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "module": "commonjs",
     "target": "es2023",
     "rootDir": "./",
     "outDir": "./dist",

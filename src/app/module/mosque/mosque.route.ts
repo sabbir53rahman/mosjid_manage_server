@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { MosqueController } from "./mosque.controller.js";
-import { checkAuth } from "../../middleware/checkAuth.js";
-import { validateRequest } from "../../middleware/validateRequest.js";
-import {  updatePrayerTimeSchema } from "./mosque.validation.js";
+import { MosqueController } from "./mosque.controller";
+import { checkAuth } from "../../middleware/checkAuth";
+import { validateRequest } from "../../middleware/validateRequest";
+import {  updatePrayerTimeSchema } from "./mosque.validation";
 
 const router = Router();
 
