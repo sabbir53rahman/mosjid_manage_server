@@ -22,7 +22,7 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await authService.loginUser(req.body);
-  const { accessToken, refreshToken } = result;
+  const { accessToken, refreshToken, role } = result;
 
   tokenHelpers.setAccessTokenCookie(res, accessToken);
   tokenHelpers.setRefreshTokenCookie(res, refreshToken);
@@ -34,6 +34,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
     data: {
       accessToken,
       refreshToken,
+      role,
     },
   });
 });

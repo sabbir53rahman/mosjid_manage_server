@@ -39,7 +39,12 @@ export const checkAuth =
 
       const user = verifiedToken.data;
 
-      if (authRoles.length > 0 && !authRoles.includes(user!.role as Role)) {
+      const databaseUser = await prisma.user.findUnique({
+        where: { id: user!.userId },
+      });
+      console.log('databaseUser',databaseUser)
+
+      if (authRoles.length > 0 && !authRoles.includes(databaseUser?.role as Role)) {
         throw new AppError(
           status.FORBIDDEN,
           "Forbidden access! You do not have permission to access this resource.",
@@ -47,7 +52,7 @@ export const checkAuth =
       }
 
       let mosqueId: string | undefined = undefined;
-      if (user!.role === Role.MOSQUE_ADMIN) {
+      if (databaseUser?.role === Role.MOSQUE_ADMIN) {
         const mosque = await prisma.mosque.findUnique({
           where: { ownerId: user!.userId },
         });
@@ -56,7 +61,7 @@ export const checkAuth =
 
       req.user = {
         userId: user!.userId,
-        role: user!.role as Role,
+        role: databaseUser?.role as Role,
         email: user!.email,
         mosqueId,
         name: user!.name,
