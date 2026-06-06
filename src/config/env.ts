@@ -74,8 +74,14 @@ const loadEnvVariables = (): EnvConfig => {
     "SUPER_ADMIN_PASSWORD",
   ];
 
-  // ✅ Skip validation ONLY during Prisma generate (optional)
-  if (process.argv.includes("prisma") || process.env.npm_lifecycle_event === "postinstall") {
+  // ✅ Skip validation during Prisma generate, build time, or postinstall
+  const isPrisma = process.argv.some((arg) => arg.includes("prisma"));
+  const isBuild =
+    process.env.npm_lifecycle_event === "build" ||
+    process.env.npm_lifecycle_event === "postinstall" ||
+    process.env.npm_lifecycle_event === "prisma:generate";
+
+  if (isPrisma || isBuild) {
     return process.env as unknown as EnvConfig;
   }
 
