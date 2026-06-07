@@ -7,7 +7,7 @@ export interface IRegisterUserPayload {
   name: string;
   email: string;
   password: string;
-  phone: number;
+  phone: string;
 }
 
 export interface IChangePasswordPayload {
