@@ -44,7 +44,7 @@ const getSingleMusulli = async (adminId: string, musulliId: string): Promise<Mus
     where: { id: musulliId, mosqueId: mosque.id },
     include: {
       paymentLogs: {
-        orderBy: { createdAt: "desc" },
+        orderBy: { paidMonth: "desc" },
         take: 12,
         skip: 0,
       },
