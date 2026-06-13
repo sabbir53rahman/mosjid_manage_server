@@ -1,6 +1,4 @@
-export interface ICollectPaymentPayload {
+export interface CollectPaymentPayload {
   musulliId: string;
   amount: number;
-  paidMonth: Date | string;
-  note?: string;
 }

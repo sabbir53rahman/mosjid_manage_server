@@ -10,12 +10,11 @@ const createMusulli = async (payload: ICreateMusulliPayload): Promise<MusulliWit
     data: {
       ...payload,
       joinedAt: new Date(payload.joinedAt),
+      lastPaidMonth: null,
     },
   });
-
   return getMusulliWithCalculations(result);
 };
-
 const getMusullis = async (adminId: string): Promise<MusulliWithCalculations[]> => {
   const mosque = await prisma.mosque.findUnique({
     where: { ownerId: adminId },
@@ -41,12 +40,13 @@ const getSingleMusulli = async (adminId: string, musulliId: string): Promise<Mus
   if (!mosque) {
     throw new AppError(status.NOT_FOUND, "Mosque not found for this admin");
   }
-
   const result = await prisma.musulli.findFirst({
     where: { id: musulliId, mosqueId: mosque.id },
     include: {
       paymentLogs: {
-        orderBy: { paymentDate: "desc" },
+        orderBy: { createdAt: "desc" },
+        take: 12,
+        skip: 0,
       },
     },
   });
