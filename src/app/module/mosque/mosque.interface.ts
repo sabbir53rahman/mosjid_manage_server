@@ -1,8 +1,18 @@
+//  const result = await MosqueService.createMosque(
+//     mosqueData,
+//     ownerId,
+//     logoUrl,
+//   );
+
 export interface ICreateMosquePayload {
-  name: string;
-  slug: string;
-  address: string;
-  phone?: string;
+  ownerId: string;
+  mosqueData: {
+    name: string;
+    slug: string;
+    address: string;
+    phone?: string;
+  };
+  logoUrl?: string;
 }
 
 export interface IUpdatePrayerTimePayload {

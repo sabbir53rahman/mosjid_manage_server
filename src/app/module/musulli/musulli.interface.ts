@@ -9,4 +9,4 @@ export interface ICreateMusulliPayload {
   isActive?: boolean;
 }
 
-export type IUpdateMusulliPayload = Partial<Omit<ICreateMusulliPayload, "mosqueId">>;
+export type IUpdateMusulliPayload = Partial<Omit<ICreateMusulliPayload, "mosqueId" | "joinedAt">>;

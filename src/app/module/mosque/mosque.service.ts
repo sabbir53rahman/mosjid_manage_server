@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from "../../lib/prisma";
 import AppError from "../../errorHelpers/appError";
 import status from "http-status";
 import { ICreateMosquePayload, IUpdatePrayerTimePayload } from "./mosque.interface";
 import { Role } from "../../../generated/prisma/enums";
 
-const createMosque = async (payload: ICreateMosquePayload, ownerId: string, logoUrl?: string) => {
+const createMosque = async (payload: ICreateMosquePayload) => {
   const existingMosque = await prisma.mosque.findUnique({
-    where: { slug: payload.slug },
+    where: { slug: payload.mosqueData.slug },
   });
 
   if (existingMosque) {
@@ -16,14 +15,14 @@ const createMosque = async (payload: ICreateMosquePayload, ownerId: string, logo
 
   const result = await prisma.mosque.create({
     data: {
-      ...payload,
-      ownerId,
-      logo : logoUrl,
+      ...payload.mosqueData,
+      ownerId: payload.ownerId,
+      logo: payload.logoUrl,
     },
   });
 
   await prisma.user.update({
-    where: { id: ownerId },
+    where: { id: payload.ownerId },
     data: {
       role: Role.MOSQUE_ADMIN,
     },
@@ -52,13 +51,14 @@ const getMosqueDetails = async (ownerId: string) => {
   return mosque;
 };
 
-// search with name
+// search with name and add pagination
 
-const getAllMosques = async (search?: string,  page?: string) => {
-  const whereClause: any = {};
-  const pageNumber = Number(page || 1);
-  const limitNumber = 10;
+const getAllMosques = async (search?: string, page?: string, limit?: string) => {
+  const pageNumber = page ? parseInt(page) : 1;
+  const limitNumber = limit ? parseInt(limit) : 10;
   const skip = (pageNumber - 1) * limitNumber;
+
+  const whereClause: any = {};
 
   if (search) {
     whereClause.name = {
@@ -67,40 +67,25 @@ const getAllMosques = async (search?: string,  page?: string) => {
     };
   }
 
-  const mosques = await prisma.mosque.findMany({
-    where: whereClause,
-    take: limitNumber,
-    skip: skip,
-    include: {
-      prayerTime: true,
-      owner: {
-        select: {
-          name: true,
-          email: true,
-          phone: true,
+  const [mosques, total] = await prisma.$transaction([
+    prisma.mosque.findMany({
+      where: whereClause,
+      skip,
+      take: limitNumber,
+      include: {
+        prayerTime: true,
+        _count: {
+          select: {
+            musullis: true,
+          },
         },
       },
-      _count: {
-        select: {
-          musullis: true,
-        },
-      },
-    },
-  });
+    }),
 
-  const total = await prisma.mosque.count({
-    where: whereClause,
-  });
+    prisma.mosque.count({ where: whereClause }),
+  ]);
 
-  return {
-    meta: {
-      page: pageNumber,
-      limit: limitNumber,
-      total,
-      totalPage: Math.ceil(total / limitNumber),
-    },
-    data: mosques,
-  };
+  return { mosques, total };
 };
 
 const updatePrayerTime = async (mosqueId: string, payload: IUpdatePrayerTimePayload) => {

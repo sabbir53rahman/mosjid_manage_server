@@ -19,12 +19,12 @@ const createMosque = catchAsync(async (req: Request, res: Response) => {
     const uploadResult = await uploadFileToCloudinary(logo, "mosque-logos");
     logoUrl = uploadResult.secure_url;
   }
-console.log(logoUrl, '........' ,mosqueData)
-  const result = await MosqueService.createMosque(
+
+  const result = await MosqueService.createMosque({
     mosqueData,
     ownerId,
     logoUrl,
-  );
+  });
 
   sendResponse(res, {
     httpStatusCode: status.CREATED,

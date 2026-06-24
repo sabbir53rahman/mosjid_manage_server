@@ -76,9 +76,7 @@ const updateMusulli = async (adminId: string, musulliId: string, payload: IUpdat
   }
 
   const updateData: any = { ...payload };
-  if (payload.joinedAt) {
-    updateData.joinedAt = new Date(payload.joinedAt);
-  }
+
 
   const result = await prisma.musulli.update({
     where: { id: musulliId },
